@@ -121,12 +121,6 @@ https://www.epochconverter.com/
 : 1708519911:0;shutdown now
 ```
 
-* mercredi 21 février 2024 13:40:11 GMT+01:00 pavucontrol
-* mercredi 21 février 2024 13:43:25 GMT+01:00 sudo
-* mercredi 21 février 2024 13:43:31 GMT+01:00 sudo -s => **root**
-* mercredi 21 février 2024 13:46:25 GMT+01:00 reset
-* mercredi 21 février 2024 13:51:51 GMT+01:00 shutdown
-
 L'attaquant a fait vite, il ne semble être resté connecté 5 minutes, ce qui laisse pas le temps de faire beaucoup de choses.
 
 Rien dans l'historique des commandes root.
@@ -166,15 +160,23 @@ cat /mnt/decrypted/@/root/.wget-hsts
 t.ly	0	1	1708519519	15552000
 ```
 
-* mercredi 21 février 2024 13:45:19 GMT+01:00 téléchargement d'un fichier via lien "t.ly"
-
 ```
 sudo find /mnt/decrypted -type f -readable ! -path "/proc/*" ! -path "/sys/*" ! -path "/dev/*" -exec grep -H 'https://t.ly' {} +
 ```
 
 (...)
 
-mercredi 21 février 2024 13:45:33 GMT+01:00 => snapshot !!!! 
+
+**Timeline :**
+
+* mercredi 21 février 2024 13:43:25 GMT+01:00 sudo
+* mercredi 21 février 2024 13:43:31 GMT+01:00 sudo -s => **root**
+* mercredi 21 février 2024 13:45:19 GMT+01:00 téléchargement d'un fichier via lien "t.ly"
+* mercredi 21 février 2024 13:45:33 GMT+01:00 **snapshot**
+* mercredi 21 février 2024 13:46:25 GMT+01:00 reset
+* mercredi 21 février 2024 13:48:51 GMT+01:00 commit
+* mercredi 21 février 2024 13:51:51 GMT+01:00 shutdown
+
 
 Par chance un snapshot a été fait juste après le wget :)
 
@@ -199,7 +201,7 @@ cd /dev/shm
 tar -xvf 1QoOr
 ```
 
-Il s'agit d'un package pacman PAM backdooré !
+Il s'agit d'un package pacman PAM "troué" !
 
 ```
 cat .PKGINFO 
@@ -223,13 +225,12 @@ provides = libpam_misc.so=0-64
 Analyses des fichiers implantés (B) vs les fichiers originaux (G):
 
 ```
-                                            size B  md5 B                               size G  md5 G
-/lib/security/pam_unix.so                   51064   1b552c11453d3b51a972ec383218a225    51064   4b2b29efd6608262238d11d448300e48
-/lib64/security/pam_unix.so                 51064   1b552c11453d3b51a972ec383218a225    51064   4b2b29efd6608262238d11d448300e48
-/usr/lib/security/pam_unix.so
-/usr/lib64/security/pam_unix.so
-/var/lib/pacman/local/pam-1.6.0-3/mtree     28530   5428f290a45a1784052b259a0f22334c    28532   67c31a157b5c12373759e35a82f5cc98
-/var/lib/systemd/random-seed                
+/lib/security/pam_unix.so
+/lib64/security/pam_unix.so
+B=1b552c11453d3b51a972ec383218a225, G=4b2b29efd6608262238d11d448300e48
+
+/var/lib/pacman/local/pam-1.6.0-3/mtree     
+B=5428f290a45a1784052b259a0f22334c, G=67c31a157b5c12373759e35a82f5cc98
 ```
 
 Décompilation du code source de la librairie `pam_unix.so` modifiée et originale via gHidra.
@@ -237,8 +238,6 @@ Décompilation du code source de la librairie `pam_unix.so` modifiée et origina
 Récupération des sources originales : https://mirrors.mit.edu/archlinux/sources/packages/pam-1.6.0-3.src.tar.gz
 
 La comparaison du code C décompilé des binaires est longue et fastidieuse.. mais porte ses fruits.
-
-
 
 Le code malicieux a été injecté dans la fonction `_unix_verify_password` :
 
@@ -258,7 +257,7 @@ Le code malicieux a été injecté dans la fonction `_unix_verify_password` :
 
 La fonction semble effectuer des opérations XOR pour chaque caractère du mot de passe avec les données de 2 variables.
 
-La déclaration des variables obtenue via la décompilation ghidra est étrange et il est compliqué a comprendre.
+La déclaration des variables obtenue via la décompilation ghidra est étrange compliquée à comprendre.
 
 ```
   local_328 = 0x6f5f4577;
@@ -308,7 +307,7 @@ local_2a8 = 0x7a44308bd5ead76d72665fc92d34bb00
 local_xxx = 0x77455f6f7c90889614b10547338e4e1b
 ```
 
-L'analyse du code assembleur de la foncgtion apporte également plus d'éléments, dont un décalage de 13 caractères pour le 2ieme XOR.
+L'analyse du code assembleur de la fonction apporte également plus d'éléments :
 
 ```
 LAB_001059e8
@@ -394,6 +393,7 @@ python pam_unix/bkdo-force.py
 ```
 
 > d3m41n_Al3xi5_0ffre_soN_p3s@nt_De_cr0issaN7s_aU_b3urrE
+
 
 
 
