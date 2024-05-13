@@ -46,7 +46,7 @@ AlexisLaptop.s01: EWF/Expert Witness/EnCase image file format
 ```
 
 
-## Montage de l'image disque EWF :
+## Montage et déchiffrement de l'image disque :
 
 ```
 $ ewfmount AlexisLaptop.s01 /mnt/ewf 
