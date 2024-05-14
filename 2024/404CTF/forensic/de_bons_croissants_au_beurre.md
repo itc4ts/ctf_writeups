@@ -178,7 +178,7 @@ sudo find /mnt/decrypted -type f -readable ! -path "/proc/*" ! -path "/sys/*" ! 
 
 Par chance un snapshot a été fait juste après le wget :)
 
-**NOTE**: L'auteur du chall m'a apporté une précision : "Pas vraiment par chance : https://aur.archlinux.org/packages/timeshift-autosnap (...) l'installation de la backdoor à trigger la création de la snapshot"
+**NOTE**: L'auteur du chall m'a apporté une précision : "Pas vraiment par chance : https://aur.archlinux.org/packages/timeshift-autosnap (...) l'installation de la backdoor à trigger la création du snapshot"
 
 Recherche des différences entre les données actuelles et celle du snapshot de 13h45.
 
