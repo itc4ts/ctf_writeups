@@ -15,10 +15,9 @@ Auteur: @Smyler
 
 ## Analyse initiale
 
-Un premier iIndices dans l'énoncé : https://github.com/AlexisGerard98/AlexisGerard98/tree/b67a78189b89be29390ddd0197878905adeebeec 
+Un premier indices dans l'énoncé : https://github.com/AlexisGerard98/AlexisGerard98/tree/b67a78189b89be29390ddd0197878905adeebeec 
 
 Date du commit: 2024-02-21T13:48:51.000+01:00
-
 
 L'image disque est accompagnée d'une photo contenant une "recovery key" générée lors du chiffrement du disque avec `systemd-cryptenroll`
 
@@ -177,8 +176,9 @@ sudo find /mnt/decrypted -type f -readable ! -path "/proc/*" ! -path "/sys/*" ! 
 * mercredi 21 février 2024 13:48:51 GMT+01:00 commit
 * mercredi 21 février 2024 13:51:51 GMT+01:00 shutdown
 
-
 Par chance un snapshot a été fait juste après le wget :)
+
+**NOTE**: L'auteur du chall m'a apporté une précision : "Pas vraiment par chance : https://aur.archlinux.org/packages/timeshift-autosnap (...) l'installation de la backdoor à trigger la création de la snapshot"
 
 Recherche des différences entre les données actuelles et celle du snapshot de 13h45.
 
